@@ -70,7 +70,6 @@ public class Filtro {
     }
 
 
-
     public enum TipoFiltro {
         ASUNTO, CONTENIDO, FECHA, REMITENTE
     }

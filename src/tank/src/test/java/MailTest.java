@@ -146,7 +146,43 @@ public class MailTest {
         assertNull(contacto);
     }
 
+
     @Test
+    public void testFiltroAsunto() {
+        // Crear un filtro para Asunto
+        Filtro filtroAsunto = new Filtro("Filtrar por Asunto");
+
+        //crea un contacto
+        contacto = new Contacto("Nombre Contacto", "contacto@ejemplo.com");
+
+        // Crear correos de ejemplo con diferentes asuntos
+        Email correo1 = new Email("Importante: Reunión", "Contenido 1", null, null);
+        Email correo2 = new Email("Notificación", "Contenido 2", null, null);
+        Email correo3 = new Email("Reunión de Equipo", "Contenido 3", null, null);
+
+        // Agregar los correos a una lista
+        
+        contacto.getBandejaEntrada().agregarEmail(correo1);
+        contacto.getBandejaEntrada().agregarEmail(correo2);
+        contacto.getBandejaEntrada().agregarEmail(correo3);
+
+
+        
+
+        // Aplicar el filtro de Asunto para buscar correos con "Importante"
+        filtroAsunto.filter(contacto.getBandejaEntrada().getEmails(), Filtro.TipoFiltro.ASUNTO, "Importante");
+
+        // Verificar que solo se encuentra el correo1 con asunto "Importante"
+        List<Email> correosFiltrados = filtroAsunto.getMailsEncontrados();
+        assertEquals(1, correosFiltrados.size());
+        assertTrue(correosFiltrados.contains(correo1));
+        assertFalse(correosFiltrados.contains(correo2));
+        assertFalse(correosFiltrados.contains(correo3));
+    }
+
+
+
+    /*@Test
     public void testFiltroAsunto() {
 
          // Crear un contacto de ejemplo
@@ -282,7 +318,7 @@ public class MailTest {
         assertEquals(1, correosFiltrados.size());
         assertTrue(correosFiltrados.contains(correo1));
         assertFalse(correosFiltrados.contains(correo2));
-    }
+    } */
 
 
 }

@@ -4,17 +4,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Filtro {
     private String nombre;
-    private Predicate<Email> predicado;
     private List<Email> mailsEncontrados = new ArrayList<>();
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;
 
-    public Filtro(String nombre, Predicate<Email> predicado) {
+    public Filtro(String nombre) {
         this.nombre = nombre;
-        this.predicado = predicado;
     }
 
     public String getNombre() {
@@ -37,22 +36,42 @@ public class Filtro {
         return fechaInicio;
     }
 
-    public void aplicarFiltro(Contacto contacto) {
-        for (Email email : contacto.getBandejaEntrada().getEmails()) {
-            if (predicado.test(email) && estaDentroDelRango(email.getFechaEnvio())) {
-                mailsEncontrados.add(email);
-            }
-        }
+    public void filter(List<Email> correos, TipoFiltro tipoFiltro, Object filtro) {
+        mailsEncontrados = correos.stream()
+                .filter(email -> cumpleFiltro(email, tipoFiltro, filtro))
+                .collect(Collectors.toList());
     }
 
     public List<Email> getMailsEncontrados() {
         return mailsEncontrados;
     }
 
+    private boolean cumpleFiltro(Email email, TipoFiltro tipoFiltro, Object filtro) {
+        switch (tipoFiltro) {
+            case ASUNTO:
+                return email.getAsunto().contains((String) filtro);
+            case CONTENIDO:
+                return email.getContenido().contains((String) filtro);
+            case FECHA:
+                return estaDentroDelRango(email.getFechaEnvio());
+            case REMITENTE:
+                return email.getRemitente().equals((Contacto) filtro);
+            default:
+                return false;
+        }
+    }
+    
+
     private boolean estaDentroDelRango(LocalDateTime fecha) {
         if (fechaInicio != null && fechaFin != null) {
             return fecha.isAfter(fechaInicio) && fecha.isBefore(fechaFin);
         }
         return true; // Si no se establece un rango, no se aplica el filtro de fecha
+    }
+
+
+
+    public enum TipoFiltro {
+        ASUNTO, CONTENIDO, FECHA, REMITENTE
     }
 }

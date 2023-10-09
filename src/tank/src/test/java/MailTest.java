@@ -3,8 +3,7 @@ import org.junit.Test;
 import org.junit.Before;
 
 import java.time.LocalDateTime;
-
-
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -12,6 +11,12 @@ import battle2023.ucp.Entities.Contacto;
 import battle2023.ucp.Entities.Email;
 import battle2023.ucp.Entities.EmailManager;
 import battle2023.ucp.Entities.Filtro;
+import battle2023.ucp.Entities.FiltroAdjunto;
+import battle2023.ucp.Entities.FiltroAsunto;
+import battle2023.ucp.Entities.FiltroContenido;
+import battle2023.ucp.Entities.FiltroFecha;
+import battle2023.ucp.Entities.FiltroRemitente;
+import battle2023.ucp.interfaces.FiltroCorreo;
 
 
 
@@ -20,8 +25,6 @@ public class MailTest {
     private Contacto remitente;
     private Contacto destinatario1;
     private Contacto destinatario2;
-    private Contacto contacto;
-
 
 
     @Before
@@ -54,8 +57,6 @@ public class MailTest {
         Email Email = new Email("Prueba", "Esto es una prueba", remitente, emailManager.getContactos());
         assertNotNull(Email);
     }
-
-    
 
 
     @Test
@@ -142,160 +143,6 @@ public class MailTest {
 
         assertNull(contacto);
     }
-
-
-    @Test
-    public void testFiltroAsunto() {
-        // Crear un filtro para Asunto
-        Filtro filtroAsunto = new Filtro("Filtrar por Asunto");
-
-        //crea un contacto
-        contacto = new Contacto("Nombre Contacto", "contacto@ejemplo.com");
-
-        // Crear correos de ejemplo con diferentes asuntos
-        Email correo1 = new Email("Importante: Reunión", "Contenido 1", null, null);
-        Email correo2 = new Email("Notificación", "Contenido 2", null, null);
-        Email correo3 = new Email("Reunión de Equipo", "Contenido 3", null, null);
-
-        // Agregar los correos a las bandejas
-        
-        contacto.getBandejaEntrada().agregarEmail(correo1);
-        contacto.getBandejaEntrada().agregarEmail(correo2);
-        contacto.getBandejaEntrada().agregarEmail(correo3);
-
-        // Aplicar el filtro de Asunto para buscar correos con "Importante"
-        filtroAsunto.filter(contacto.getBandejaEntrada().getEmails(), Filtro.TipoFiltro.ASUNTO, "Importante");
-
-        // Verificar que solo se encuentra el correo1 con asunto "Importante"
-        List<Email> correosFiltrados = filtroAsunto.getMailsEncontrados();
-        assertEquals(1, correosFiltrados.size());
-        assertTrue(correosFiltrados.contains(correo1));
-        assertFalse(correosFiltrados.contains(correo2));
-        assertFalse(correosFiltrados.contains(correo3));
-    }
-
-
-    @Test
-    public void testFiltroContenido() {
-        // Crear un filtro para Contenido
-        Filtro filtroContenido = new Filtro("Filtrar por Contenido");
-
-        contacto = new Contacto("Nombre Contacto", "contacto@ejemplo.com");
-
-        // Crear correos de ejemplo con diferentes contenidos
-        Email correo1 = new Email("Asunto 1", "Este es un correo importante.", null, null);
-        Email correo2 = new Email("Asunto 2", "Contenido sin relevancia.", null, null);
-        Email correo3 = new Email("Asunto 3", "Correo con información clave.", null, null);
-
-        // Agregar los correos a las bandejas
-        contacto.getBandejaEntrada().agregarEmail(correo1);
-        contacto.getBandejaEntrada().agregarEmail(correo2);
-        contacto.getBandejaEntrada().agregarEmail(correo3);
-
-        // Aplicar el filtro de Contenido para buscar correos con "importante"
-        filtroContenido.filter(contacto.getBandejaEntrada().getEmails(), Filtro.TipoFiltro.CONTENIDO, "importante");
-
-        // Verificar que solo se encuentra el correo1 con contenido "importante"
-        List<Email> correosFiltrados = filtroContenido.getMailsEncontrados();
-        assertEquals(1, correosFiltrados.size());
-        assertTrue(correosFiltrados.contains(correo1));
-        assertFalse(correosFiltrados.contains(correo2));
-        assertFalse(correosFiltrados.contains(correo3));
-    }
-
-    @Test
-    public void testFiltroFecha() {
-        // Crear un filtro para Fecha
-        Filtro filtroFecha = new Filtro("Filtrar por Fecha");
-
-        contacto = new Contacto("Nombre Contacto", "contacto@ejemplo.com");
-
-        // Crear correos de ejemplo con diferentes fechas de envío
-        Email correo1 = new Email("Asunto 1", "Contenido 1", null, null);
-        correo1.setFechaEnvio(LocalDateTime.of(2023, 3, 15, 10, 0)); // Fecha dentro del rango
-
-        Email correo2 = new Email("Asunto 2", "Contenido 2", null, null);
-        correo2.setFechaEnvio(LocalDateTime.of(2023, 6, 20, 14, 30)); // Fecha fuera del rango
-
-        // Agregar los correos a las bandejas
-        contacto.getBandejaEntrada().agregarEmail(correo1);
-        contacto.getBandejaEntrada().agregarEmail(correo2);
-
-        // Definir un rango de fechas para el filtro (marzo a mayo de 2023)
-        filtroFecha.setFechaInicio(LocalDateTime.of(2023, 3, 1, 0, 0));
-        filtroFecha.setFechaFin(LocalDateTime.of(2023, 5, 31, 23, 59));
-
-        // Aplicar el filtro de Fecha para buscar correos dentro del rango
-        filtroFecha.filter(contacto.getBandejaEntrada().getEmails(), Filtro.TipoFiltro.FECHA, null);
-
-        // Verificar que solo se encuentra el correo1 dentro del rango de fechas
-        List<Email> correosFiltrados = filtroFecha.getMailsEncontrados();
-        assertEquals(1, correosFiltrados.size());
-        assertTrue(correosFiltrados.contains(correo1));
-        assertFalse(correosFiltrados.contains(correo2));
-    }
-
-    @Test
-    public void testFiltroRemitente() {
-        // Crear un filtro para Remitente
-        Filtro filtroRemitente = new Filtro("Filtrar por Remitente");
-
-        contacto = new Contacto("Nombre Contacto", "contacto@ejemplo.com");
-
-        // Crear correos de ejemplo con diferentes remitentes
-        Contacto remitente1 = new Contacto("Remitente 1", "remitente1@ejemplo.com");
-        Contacto remitente2 = new Contacto("Remitente 2", "remitente2@ejemplo.com");
-        Contacto remitente3 = new Contacto("Remitente 3", "remitente3@ejemplo.com");
-
-        Email correo1 = new Email("Asunto 1", "Contenido 1", remitente1, null);
-        Email correo2 = new Email("Asunto 2", "Contenido 2", remitente2, null);
-        Email correo3 = new Email("Asunto 3", "Contenido 3", remitente3, null);
-
-        // Agregar los correos a las bandejas
-        contacto.getBandejaEntrada().agregarEmail(correo1);
-        contacto.getBandejaEntrada().agregarEmail(correo2);
-        contacto.getBandejaEntrada().agregarEmail(correo3);
-
-        // Definir el remitente para el filtro
-        filtroRemitente.filter(contacto.getBandejaEntrada().getEmails(), Filtro.TipoFiltro.REMITENTE, remitente2);
-
-        // Verificar que solo se encuentra el correo2 con remitente2
-        List<Email> correosFiltrados = filtroRemitente.getMailsEncontrados();
-        assertEquals(1, correosFiltrados.size());
-        assertTrue(correosFiltrados.contains(correo2));
-        assertFalse(correosFiltrados.contains(correo1));
-        assertFalse(correosFiltrados.contains(correo3));
-    }
-
-
-    @Test
-    public void TestTieneAdjunto(){
-        
-    Filtro filtroAdjunto = new Filtro("Filtrar por Adjunto");
-
-    Contacto contacto = new Contacto("pedro", "pedro@gmail.com");
-
-    // Crear correos de ejemplo con y sin adjuntos
-    Email correo1 = new Email("Correo 1", "Contenido 1", null, null);
-    correo1.setTieneAdjunto(true);
-    
-    Email correo2 = new Email("Correo 2", "Contenido 2", null, null);
-    correo2.setTieneAdjunto(false);
-    
-    // Agregar los correos a las bandejas
-        contacto.getBandejaEntrada().agregarEmail(correo1);
-        contacto.getBandejaEntrada().agregarEmail(correo2);
-    
-    // Aplicar el filtro de Adjunto para buscar correos con adjunto
-    filtroAdjunto.filter(contacto.getBandejaEntrada().getEmails(), Filtro.TipoFiltro.ADJUNTO, null);
-    
-    // Verificar que solo se encuentra el correo1 con adjunto
-    List<Email> correosFiltrados = filtroAdjunto.getMailsEncontrados();
-    assertEquals(1, correosFiltrados.size());
-    assertTrue(correosFiltrados.contains(correo1));
-    assertFalse(correosFiltrados.contains(correo2));  
-    }
-
 
     @Test
     public void testQuitarEmailDeBandejaDeEntrada() {
@@ -386,6 +233,167 @@ public class MailTest {
 
         // Verificar el tamaño de la lista
         assertEquals(2, favoritos.size());
+    }
+
+
+    @Test
+    public void testFiltroAsunto2() {
+        // Crear varios correos de ejemplo
+        Email correo1 = new Email("Asunto importante", "Contenido del correo 1", null, null);
+        Email correo2 = new Email("Correo sin importancia", "Contenido del correo 2", null, null);
+        Email correo3 = new Email("Asunto importante", "Contenido del correo 3", null, null);
+
+        // Crear un filtro de Asunto
+        FiltroCorreo filtroAsunto = new FiltroAsunto("importante");
+
+        Contacto contacto = new Contacto("pedro", "pedro@gmail.com");
+
+        // Aplicar el filtro a los correos
+        contacto.getBandejaEntrada().agregarEmail(correo1);
+        contacto.getBandejaEntrada().agregarEmail(correo2);
+        contacto.getBandejaEntrada().agregarEmail(correo3);
+
+        Filtro filtro = new Filtro("Filtro Asunto");
+        filtro.filter(contacto.getBandejaEntrada().getEmails(), filtroAsunto);
+
+        // Verificar que los correos correctos estén en los correos encontrados
+        assertTrue(filtro.getMailsEncontrados().contains(correo1));
+        assertTrue(filtro.getMailsEncontrados().contains(correo3));
+        assertFalse(filtro.getMailsEncontrados().contains(correo2));
+
+        // Verificar el número de correos encontrados
+        assertEquals(2, filtro.getMailsEncontrados().size());
+    }
+
+    @Test
+    public void testFiltroRemitente2() {
+        // Crear varios correos de ejemplo
+        Contacto remitente1 = new Contacto("Remitente 1", "remitente1@ejemplo.com");
+        Contacto remitente2 = new Contacto("Remitente 2", "remitente2@ejemplo.com");
+        Contacto remitente3 = new Contacto("Remitente 3", "remitente3@ejemplo.com");
+
+        Email correo1 = new Email("Asunto 1", "Contenido del correo 1", remitente1, null);
+        Email correo2 = new Email("Asunto 2", "Contenido del correo 2", remitente2, null);
+        Email correo3 = new Email("Asunto 3", "Contenido del correo 3", remitente3, null);
+
+        // Crear un filtro de Remitente
+        FiltroCorreo filtroRemitente = new FiltroRemitente(remitente1);
+
+        Contacto contacto = new Contacto("pedro", "pedro@gmail.com");
+
+        // Aplicar el filtro a los correos
+        contacto.getBandejaEntrada().agregarEmail(correo1);
+        contacto.getBandejaEntrada().agregarEmail(correo2);
+        contacto.getBandejaEntrada().agregarEmail(correo3);
+
+        Filtro filtro = new Filtro("Filtro Remitente");
+        filtro.filter(contacto.getBandejaEntrada().getEmails(), filtroRemitente);
+
+        // Verificar que los correos correctos estén en los correos encontrados
+        assertTrue(filtro.getMailsEncontrados().contains(correo1));
+        assertFalse(filtro.getMailsEncontrados().contains(correo2));
+        assertFalse(filtro.getMailsEncontrados().contains(correo3));
+
+        // Verificar el número de correos encontrados
+        assertEquals(1, filtro.getMailsEncontrados().size());
+    }
+
+
+    @Test
+    public void testFiltroFecha2() {
+        // Crear varios correos de ejemplo con fechas diferentes
+
+        Contacto contacto = new Contacto("pedro", "pedro@gmail.com");
+
+        Email correo1 = new Email("Asunto 1", "Contenido del correo 1", new Contacto("Remitente 1", "remitente1@ejemplo.com"), new ArrayList<>());
+        Email correo2 = new Email("Asunto 2", "Contenido del correo 2", new Contacto("Remitente 2", "remitente2@ejemplo.com"), new ArrayList<>());
+        Email correo3 = new Email("Asunto 3", "Contenido del correo 3", new Contacto("Remitente 3", "remitente3@ejemplo.com"), new ArrayList<>());
+
+        correo1.setFechaEnvio(LocalDateTime.of(2023, 1, 1, 10, 0)); // Fecha dentro del rango
+        correo2.setFechaEnvio(LocalDateTime.of(2023, 2, 1, 12, 0)); // Fecha dentro del rango
+        correo3.setFechaEnvio(LocalDateTime.of(2023, 3, 1, 14, 0)); // Fecha dentro del rango
+
+
+        // Crear un filtro de Fecha que incluye un rango de fechas
+        LocalDateTime fechaInicio = LocalDateTime.of(2023, 1, 15, 0, 0);
+        LocalDateTime fechaFin = LocalDateTime.of(2023, 2, 28, 23, 59);
+        FiltroCorreo filtroFecha = new FiltroFecha(fechaInicio, fechaFin);
+
+        // Aplicar el filtro a los correos
+        contacto.getBandejaEntrada().agregarEmail(correo1);
+        contacto.getBandejaEntrada().agregarEmail(correo2);
+        contacto.getBandejaEntrada().agregarEmail(correo3);
+
+        Filtro filtro = new Filtro("Filtro Fecha");
+        filtro.filter(contacto.getBandejaEntrada().getEmails(), filtroFecha);
+
+        // Verificar que los correos correctos estén en los correos encontrados
+        assertFalse(filtro.getMailsEncontrados().contains(correo1));
+        assertTrue(filtro.getMailsEncontrados().contains(correo2));
+        assertFalse(filtro.getMailsEncontrados().contains(correo3));
+
+        // Verificar el número de correos encontrados
+        assertEquals(1, filtro.getMailsEncontrados().size());
+    }
+
+    @Test
+    public void testFiltroAdjunto() {
+        // Crear varios correos de ejemplo con y sin adjunto
+        Email correo1 = new Email("Asunto 1", "Contenido del correo 1", new Contacto("Remitente 1", "remitente1@ejemplo.com"), new ArrayList<>());
+        Email correo2 = new Email("Asunto 2", "Contenido del correo 2", new Contacto("Remitente 2", "remitente2@ejemplo.com"), new ArrayList<>());
+        Email correo3 = new Email("Asunto 3", "Contenido del correo 3", new Contacto("Remitente 3", "remitente3@ejemplo.com"), new ArrayList<>());
+        correo3.setTieneAdjunto(true);
+
+        // Crear un filtro de Adjunto
+        FiltroCorreo filtroAdjunto = new FiltroAdjunto(); // Buscar correos con adjunto
+
+        Contacto contacto = new Contacto("pedro", "pedro@gmail.com");
+
+        // Aplicar el filtro a los correos
+        contacto.getBandejaEntrada().agregarEmail(correo1);
+        contacto.getBandejaEntrada().agregarEmail(correo2);
+        contacto.getBandejaEntrada().agregarEmail(correo3);
+
+        Filtro filtro = new Filtro("Filtro Adjunto");
+        filtro.filter(contacto.getBandejaEntrada().getEmails(), filtroAdjunto);
+
+        // Verificar que los correos correctos estén en los correos encontrados
+        assertFalse(filtro.getMailsEncontrados().contains(correo1));
+        assertFalse(filtro.getMailsEncontrados().contains(correo2));
+        assertTrue(filtro.getMailsEncontrados().contains(correo3));
+
+        // Verificar el número de correos encontrados
+        assertEquals(1, filtro.getMailsEncontrados().size());
+    }
+
+
+    @Test
+    public void testFiltroContenido2() {
+        // Crear varios correos de ejemplo con diferentes contenidos
+        Email correo1 = new Email("Asunto 1", "Este es un contenido de prueba", new Contacto("Remitente 1", "remitente1@ejemplo.com"), new ArrayList<>());
+        Email correo2 = new Email("Asunto 2", "Contenido importante", new Contacto("Remitente 2", "remitente2@ejemplo.com"), new ArrayList<>());
+        Email correo3 = new Email("Asunto 3", "Texto sin relevancia", new Contacto("Remitente 3", "remitente3@ejemplo.com"), new ArrayList<>());
+
+        // Crear un filtro de Contenido
+        FiltroCorreo filtroContenido = new FiltroContenido("importante");
+
+        Contacto contacto = new Contacto("pedro", "pedro@gmail.com");
+
+        // Aplicar el filtro a los correos
+        contacto.getBandejaEntrada().agregarEmail(correo1);
+        contacto.getBandejaEntrada().agregarEmail(correo2);
+        contacto.getBandejaEntrada().agregarEmail(correo3);
+
+        Filtro filtro = new Filtro("Filtro Contenido");
+        filtro.filter(contacto.getBandejaEntrada().getEmails(), filtroContenido);
+
+        // Verificar que los correos correctos estén en los correos encontrados
+        assertFalse(filtro.getMailsEncontrados().contains(correo1));
+        assertTrue(filtro.getMailsEncontrados().contains(correo2));
+        assertFalse(filtro.getMailsEncontrados().contains(correo3));
+
+        // Verificar el número de correos encontrados
+        assertEquals(1, filtro.getMailsEncontrados().size());
     }
 
 

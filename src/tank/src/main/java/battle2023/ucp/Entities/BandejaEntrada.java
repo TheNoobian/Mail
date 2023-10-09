@@ -14,6 +14,10 @@ public class BandejaEntrada {
         return emails;
     }
 
+    public void quitarEmail(Email email) {
+        emails.remove(email);
+    }
+
     // Puedes agregar otros métodos según sea necesario
 }
 

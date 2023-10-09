@@ -300,6 +300,28 @@ public class MailTest {
     }
 
 
+    @Test
+    public void testQuitarEmailDeBandejaDeEntrada() {
+        // Crear un contacto y una bandeja de entrada
+        Contacto contacto = new Contacto("Nombre Contacto", "contacto@ejemplo.com");
+
+        // Crear un correo de ejemplo y agregarlo a la bandeja de entrada
+        Email correo = new Email("Asunto 1", "Contenido 1", null, null);
+        contacto.getBandejaEntrada().agregarEmail(correo);
+
+        // Verificar que el correo esté en la bandeja de entrada
+        assertTrue(contacto.getBandejaEntrada().getEmails().contains(correo));
+
+        // Queremos quitar el correo de la bandeja de entrada
+        contacto.getBandejaEntrada().quitarEmail(correo);
+
+        // Verificar que el correo haya sido eliminado de la bandeja de entrada
+        assertFalse(contacto.getBandejaEntrada().getEmails().contains(correo));
+        assertEquals(0, contacto.getBandejaEntrada().getEmails().size());
+    }
+
+
+
 
 
 

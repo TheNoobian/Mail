@@ -271,6 +271,42 @@ public class MailTest {
     }
 
 
+    @Test
+    public void TestTieneAdjunto(){
+        
+    Filtro filtroAdjunto = new Filtro("Filtrar por Adjunto");
+
+    Contacto contacto = new Contacto("pedro", "pedro@gmail.com");
+
+    // Crear correos de ejemplo con y sin adjuntos
+    Email correo1 = new Email("Correo 1", "Contenido 1", null, null);
+    correo1.setTieneAdjunto(true);
+    
+    Email correo2 = new Email("Correo 2", "Contenido 2", null, null);
+    correo2.setTieneAdjunto(false);
+    
+    // Agregar los correos a las bandejas
+        contacto.getBandejaEntrada().agregarEmail(correo1);
+        contacto.getBandejaEntrada().agregarEmail(correo2);
+    
+    // Aplicar el filtro de Adjunto para buscar correos con adjunto
+    filtroAdjunto.filter(contacto.getBandejaEntrada().getEmails(), Filtro.TipoFiltro.ADJUNTO, null);
+    
+    // Verificar que solo se encuentra el correo1 con adjunto
+    List<Email> correosFiltrados = filtroAdjunto.getMailsEncontrados();
+    assertEquals(1, correosFiltrados.size());
+    assertTrue(correosFiltrados.contains(correo1));
+    assertFalse(correosFiltrados.contains(correo2));  
+    }
+
+
+
+
+
+
+
+
+
 
     /*@Test
     public void testFiltroAsunto() {

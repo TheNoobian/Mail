@@ -10,6 +10,7 @@ public class Email {
     private Contacto remitente;
     private LocalDateTime fechaEnvio;
     private List<Contacto> para = new ArrayList<>();
+    private boolean tieneAdjunto;
 
     public Email() {
         // Constructor vacío
@@ -29,6 +30,14 @@ public class Email {
 
     public void setAsunto(String asunto) {
         this.asunto = asunto;
+    }
+
+    public boolean tieneAdjunto() {
+        return tieneAdjunto;
+    }
+
+    public void setTieneAdjunto(boolean tieneAdjunto) {
+        this.tieneAdjunto = tieneAdjunto;
     }
 
     public LocalDateTime getFechaEnvio() {

@@ -3,7 +3,6 @@ package battle2023.ucp.Entities;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Filtro {
@@ -56,6 +55,8 @@ public class Filtro {
                 return estaDentroDelRango(email.getFechaEnvio());
             case REMITENTE:
                 return email.getRemitente().equals((Contacto) filtro);
+            case ADJUNTO:
+                return email.tieneAdjunto();
             default:
                 return false;
         }
@@ -71,6 +72,6 @@ public class Filtro {
 
 
     public enum TipoFiltro {
-        ASUNTO, CONTENIDO, FECHA, REMITENTE
+        ASUNTO, CONTENIDO, FECHA, REMITENTE, ADJUNTO
     }
 }

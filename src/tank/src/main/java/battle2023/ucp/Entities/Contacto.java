@@ -1,6 +1,5 @@
 package battle2023.ucp.Entities;
-import java.util.List;
-import java.util.ArrayList;
+
 
 public class Contacto {
     private String nombre;
@@ -18,10 +17,6 @@ public class Contacto {
         setEmail(email);
     }
     
-   /* public Contacto(String nombre, String email) {
-        this.nombre = nombre;
-        this.email = email;
-    } */
 
     public BandejaEntrada getBandejaEntrada() {
         return bandejaEntrada;
@@ -31,7 +26,6 @@ public class Contacto {
         return bandejaEnviados;
     }
 
-    // Getters y setters
 
     public String getNombre() {
         return nombre;

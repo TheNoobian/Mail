@@ -3,18 +3,17 @@ import org.junit.Test;
 import org.junit.Before;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 
 import java.util.List;
 
-import battle2023.ucp.Entities.BandejaEntrada;
-import battle2023.ucp.Entities.BandejaEnviados;
+
 import battle2023.ucp.Entities.Contacto;
 import battle2023.ucp.Entities.Email;
 import battle2023.ucp.Entities.EmailManager;
 import battle2023.ucp.Entities.Filtro;
 
-import java.util.function.Predicate;
+
 
 public class MailTest {
     private EmailManager emailManager;
@@ -22,9 +21,7 @@ public class MailTest {
     private Contacto destinatario1;
     private Contacto destinatario2;
     private Contacto contacto;
-    private Filtro filtroAsunto;
-    private Filtro filtroRemitente;
-    private Filtro filtroContenido;
+
 
 
     @Before

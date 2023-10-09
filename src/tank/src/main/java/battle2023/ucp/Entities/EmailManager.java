@@ -4,17 +4,11 @@ import java.util.ArrayList;
 
 public class EmailManager {
     private BandejaEntrada bandejaEntrada;
-    private BandejaEnviados bandejaEnviados;
     private List<Contacto> contactos = new ArrayList<>();
     private List<Contacto> contactosFavoritos = new ArrayList<>();
 
     public EmailManager() {
         // Constructor vacío
-    }
-
-    public EmailManager(BandejaEntrada bandejaEntrada, BandejaEnviados bandejaEnviados) {
-        this.bandejaEntrada = bandejaEntrada;
-        this.bandejaEnviados = bandejaEnviados;
     }
 
     public void agregarContacto(Contacto contacto) {

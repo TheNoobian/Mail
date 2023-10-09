@@ -15,10 +15,6 @@ public class Filtro {
         this.nombre = nombre;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
     public void filter(List<Email> correos, FiltroCorreo filtroCorreo) {
         mailsEncontrados = correos.stream()
                 .filter(email -> filtroCorreo.cumpleFiltro(email))

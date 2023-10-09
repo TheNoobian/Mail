@@ -64,11 +64,4 @@ public class Email {
         this.remitente = remitente;
     }
 
-    public List<Contacto> getPara() {
-        return para;
-    }
-
-    public void agregarDestinatario(Contacto contacto) {
-        para.add(contacto);
-    }
 }

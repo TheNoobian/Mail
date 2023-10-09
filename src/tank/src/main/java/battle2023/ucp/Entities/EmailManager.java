@@ -3,7 +3,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class EmailManager {
-    private BandejaEntrada bandejaEntrada;
     private List<Contacto> contactos = new ArrayList<>();
     private List<Contacto> contactosFavoritos = new ArrayList<>();
 
@@ -33,10 +32,6 @@ public class EmailManager {
         for (Contacto destinatario : destinatarios) {
             destinatario.getBandejaEntrada().agregarEmail(email);
         }
-    }
-
-    public void recibirEmail(Email email) {
-        bandejaEntrada.agregarEmail(email);
     }
 
     public List<Contacto> getContactos() {

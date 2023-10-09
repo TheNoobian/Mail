@@ -6,6 +6,7 @@ public class EmailManager {
     private BandejaEntrada bandejaEntrada;
     private BandejaEnviados bandejaEnviados;
     private List<Contacto> contactos = new ArrayList<>();
+    private List<Contacto> contactosFavoritos = new ArrayList<>();
 
     public EmailManager() {
         // Constructor vacío
@@ -22,6 +23,14 @@ public class EmailManager {
 
     public void quitarContacto(Contacto contacto) {
         contactos.remove(contacto);
+    }
+
+    public void agregarContactoFavorito(Contacto contactoFavorito) {
+        contactosFavoritos.add(contactoFavorito);
+    }
+
+    public List<Contacto> getContactosFavoritos() {
+        return contactosFavoritos;
     }
 
     public void enviarEmail(Email email, Contacto remitente, List<Contacto> destinatarios) {

@@ -361,6 +361,36 @@ public class MailTest {
         assertEquals(0, emailManager.getContactos().size());
     }
 
+    @Test
+    public void testAgregarYObtenerContactosFavoritos() {
+        // Crear una instancia de EmailManager
+        EmailManager emailManager = new EmailManager();
+
+        // Crear un contacto favorito y agregarlo a la lista de contactos favoritos
+        Contacto favorito1 = new Contacto("Nombre Favorito 1", "favorito1@ejemplo.com");
+        emailManager.agregarContactoFavorito(favorito1);
+
+        // Obtener la lista de contactos favoritos
+        List<Contacto> favoritos = emailManager.getContactosFavoritos();
+
+        // Verificar que el contacto favorito esté en la lista de contactos favoritos
+        assertTrue(favoritos.contains(favorito1));
+
+        // Crear otro contacto favorito y agregarlo
+        Contacto favorito2 = new Contacto("Nombre Favorito 2", "favorito2@ejemplo.com");
+        emailManager.agregarContactoFavorito(favorito2);
+
+        // Obtener la lista de contactos favoritos nuevamente
+        favoritos = emailManager.getContactosFavoritos();
+
+        // Verificar que ambos contactos favoritos estén en la lista de contactos favoritos
+        assertTrue(favoritos.contains(favorito1));
+        assertTrue(favoritos.contains(favorito2));
+
+        // Verificar el tamaño de la lista
+        assertEquals(2, favoritos.size());
+    }
+
 
 
 

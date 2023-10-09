@@ -321,6 +321,27 @@ public class MailTest {
     }
 
 
+    @Test
+    public void testQuitarEmailDeBandejaDeSalida() {
+        // Crear un contacto y una bandeja de enviados
+        Contacto contacto = new Contacto("Nombre Contacto", "contacto@ejemplo.com");
+
+        // Crear un correo de ejemplo y agregarlo a la bandeja de enviados
+        Email correo = new Email("Asunto 1", "Contenido 1", null, null);
+        contacto.getBandejaEnviados().agregarEmail(correo);
+
+        // Verificar que el correo esté en la bandeja de enviados
+        assertTrue(contacto.getBandejaEnviados().getEmails().contains(correo));
+
+        // Queremos quitar el correo de la bandeja de enviados
+        contacto.getBandejaEnviados().quitarEmail(correo);
+
+        // Verificar que el correo haya sido eliminado de la bandeja de enviados
+        assertFalse(contacto.getBandejaEnviados().getEmails().contains(correo));
+        assertEquals(0, contacto.getBandejaEnviados().getEmails().size());
+    }
+
+
 
 
 

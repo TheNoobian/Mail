@@ -322,7 +322,7 @@ public class MailTest {
 
 
     @Test
-    public void testQuitarEmailDeBandejaDeSalida() {
+    public void testQuitarEmailDeBandejaDeEnviados() {
         // Crear un contacto y una bandeja de enviados
         Contacto contacto = new Contacto("Nombre Contacto", "contacto@ejemplo.com");
 
@@ -339,6 +339,26 @@ public class MailTest {
         // Verificar que el correo haya sido eliminado de la bandeja de enviados
         assertFalse(contacto.getBandejaEnviados().getEmails().contains(correo));
         assertEquals(0, contacto.getBandejaEnviados().getEmails().size());
+    }
+
+    @Test
+    public void testQuitarContactoDeEmailManager() {
+        // Crear una instancia de EmailManager
+        EmailManager emailManager = new EmailManager();
+
+        // Crear un contacto de ejemplo y agregarlo a la lista de contactos
+        Contacto contacto = new Contacto("Nombre Contacto", "contacto@ejemplo.com");
+        emailManager.agregarContacto(contacto);
+
+        // Verificar que el contacto esté en la lista de contactos
+        assertTrue(emailManager.getContactos().contains(contacto));
+
+        // Queremos quitar el contacto de la lista de contactos
+        emailManager.quitarContacto(contacto);
+
+        // Verificar que el contacto haya sido eliminado de la lista de contactos
+        assertFalse(emailManager.getContactos().contains(contacto));
+        assertEquals(0, emailManager.getContactos().size());
     }
 
 

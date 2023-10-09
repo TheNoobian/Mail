@@ -20,6 +20,10 @@ public class EmailManager {
         contactos.add(contacto);
     }
 
+    public void quitarContacto(Contacto contacto) {
+        contactos.remove(contacto);
+    }
+
     public void enviarEmail(Email email, Contacto remitente, List<Contacto> destinatarios) {
         remitente.getBandejaEnviados().agregarEmail(email);
 
